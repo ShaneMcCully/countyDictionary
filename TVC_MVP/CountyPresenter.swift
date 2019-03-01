@@ -21,7 +21,11 @@ class CountyPresnter {
     unowned let view: CountyView
     weak var delegate: CountyDelegate?
 
-    var countyArray: [County]?
+    var countyArray: [County]? {
+        didSet {
+            view.reloadData()
+        }
+    }
 
     init(view: CountyView) {
         self.view = view
