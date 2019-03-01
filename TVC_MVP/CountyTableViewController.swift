@@ -18,6 +18,14 @@ private struct Constants {
 
 }
 
+protocol CountyView: class {
+
+    func presentAlert(county: County, title: String, message: String)
+
+    func reloadData()
+
+}
+
 class CountyTableViewController: UITableViewController, CountyView {
 
     var presenter: CountyPresnter!
