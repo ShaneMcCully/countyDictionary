@@ -31,7 +31,7 @@ class CountyTableViewController: UITableViewController, CountyView {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.delegate = self as? CountyDelegate
+        delegate = self as? CountyDelegate
         presenter = CountyPresnter(view: self)
         presenter.viewDidLoad()
     }
