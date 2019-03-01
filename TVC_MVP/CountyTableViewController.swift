@@ -18,11 +18,6 @@ private struct Constants {
 
 }
 
-enum Sections: Int {
-    case Header
-    case Contents
-}
-
 class CountyTableViewController: UITableViewController, CountyView {
 
     var presenter: CountyPresnter!
