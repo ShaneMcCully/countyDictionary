@@ -15,7 +15,13 @@ private struct Constants {
     static let alertTitleBlock = "County ID for "
     static let alertTitleBlockEnd = " is"
     static let okayString = "Okay"
+    static let headerTitle = "Counties"
 
+}
+
+enum Sections: Int {
+    case Header
+    case Contents
 }
 
 class CountyTableViewController: UITableViewController, CountyView {
@@ -32,43 +38,12 @@ class CountyTableViewController: UITableViewController, CountyView {
         super.viewDidLoad()
 
         self.presenter = CountyPresnter(view: self)
-        parseAndSetJSON()
-    }
-
-    func parseAndSetJSON(){
-        countyArray = presenter.parseJSON()
-    }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return countyArray?.count ?? 0
-    }
-
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! CountyTableViewCell
-
-        if let county = countyArray?[indexPath.row] {
-            if county.countyName == Constants.nullCountyName {
-                cell.isHidden = true
-            }
-            else {
-                cell.setup(county: county, indexPath: indexPath)
-                return cell
-            }
-        }
-        return cell
+        presenter.viewDidLoad()
     }
 
     func presentAlert(county: County) {
         let alertView = UIAlertController(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd, message: String(county.countyID), preferredStyle: .alert)
         alertView.addAction(UIAlertAction.init(title: Constants.okayString, style: .default, handler: { _ in
-            
             alertView.dismiss(animated: true, completion: {
                 print("dismiss")
             })
@@ -77,7 +52,7 @@ class CountyTableViewController: UITableViewController, CountyView {
     }
 
     func parseJSON() -> [County] {
-        var countyArray = [County]()
+        countyArray = [County]()
         if let path = Bundle.main.path(forResource: "counties", ofType: "json") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path))
@@ -87,15 +62,42 @@ class CountyTableViewController: UITableViewController, CountyView {
                         let name = item["name"] as! String
                         let id = item["id"] as! Int
                         let countyObject = County(countyID: id, countyName: name)
-                        countyArray.append(countyObject)
+                        self.countyArray?.append(countyObject)
                     }
                 }
             } catch {
-                //
+
             }
         }
+        guard let countyArray = countyArray else { return [County]() }
         return countyArray
     }
+
+    // MARK: - UITableViewDataSource methods
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return countyArray?.count ?? 0
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! CountyTableViewCell
+        if let county = countyArray?[indexPath.row] {
+            if county.countyName == Constants.nullCountyName {
+                cell.isHidden = true
+            }
+            else {
+                cell.setup(county: county)
+                return cell
+            }
+        }
+        return cell
+    }
+
+    // MARK: - UITableViewDelegate methods
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let county = countyArray?[indexPath.row] {

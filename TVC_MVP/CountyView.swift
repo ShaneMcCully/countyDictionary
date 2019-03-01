@@ -16,5 +16,3 @@ protocol CountyView: class {
     
 }
 
-
-// View - protocol that view controller conforms to - anything thats here needs to be implemented in the VC
