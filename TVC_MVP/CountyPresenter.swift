@@ -20,15 +20,8 @@ class CountyPresnter {
         view.parseJSON()
     }
 
-    func parseJSON() -> [County] {
-        let parsedJSON = view.parseJSON()
-        return parsedJSON
-    }
-
     func presentAlert(county: County) {
         view.presentAlert(county: county)
     }
 
 }
-
-// Presenter - needs to call the view functions (which in turn are implemented within the VC)

@@ -11,7 +11,6 @@ import UIKit
 private struct Constants {
 
     static let cellIdentifier = "CountyCell"
-    static let nullCountyName = "Any"
     static let alertTitleBlock = "County ID for "
     static let alertTitleBlockEnd = " is"
     static let okayString = "Okay"
@@ -51,7 +50,7 @@ class CountyTableViewController: UITableViewController, CountyView {
         self.present(alertView, animated: true, completion: nil)
     }
 
-    func parseJSON() -> [County] {
+    func parseJSON() {
         countyArray = [County]()
         if let path = Bundle.main.path(forResource: "counties", ofType: "json") {
             do {
@@ -66,11 +65,9 @@ class CountyTableViewController: UITableViewController, CountyView {
                     }
                 }
             } catch {
-
+                // error handling?
             }
         }
-        guard let countyArray = countyArray else { return [County]() }
-        return countyArray
     }
 
     // MARK: - UITableViewDataSource methods
@@ -86,7 +83,7 @@ class CountyTableViewController: UITableViewController, CountyView {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! CountyTableViewCell
         if let county = countyArray?[indexPath.row] {
-            if county.countyName == Constants.nullCountyName {
+            if county.countyID == 0 {
                 cell.isHidden = true
             }
             else {

@@ -10,7 +10,7 @@ import Foundation
 
 protocol CountyView: class {
 
-    func parseJSON() -> [County]
+    func parseJSON()
 
     func presentAlert(county: County)
     
