@@ -31,6 +31,10 @@ class CountyPresnter {
         self.view = view
     }
 
+    func reloadData() {
+        view.reloadData()
+    }
+
     func viewDidLoad() {
         parseJSON()
     }
@@ -49,6 +53,11 @@ class CountyPresnter {
 
     func numberOfRowsInSection() -> Int {
         return countyArray?.count ?? 0
+    }
+
+    func deleteCounty(county: County) {
+        countyArray?.removeAll{ $0.countyID == county.countyID }
+        reloadData()
     }
 
     func parseJSON() {

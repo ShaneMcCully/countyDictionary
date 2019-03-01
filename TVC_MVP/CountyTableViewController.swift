@@ -12,6 +12,7 @@ private struct Constants {
 
     static let cellIdentifier = "CountyCell"
     static let okayString = "Okay"
+    static let removeFromList = "Remove From List"
 
 }
 
@@ -31,7 +32,7 @@ class CountyTableViewController: UITableViewController, CountyView {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        delegate = self as? CountyDelegate
+        delegate = self
         presenter = CountyPresnter(view: self)
         presenter.viewDidLoad()
     }
@@ -51,9 +52,10 @@ class CountyTableViewController: UITableViewController, CountyView {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! CountyTableViewCell
         guard let county = presenter.fetchCounty(for: indexPath) else { fatalError("fatal error : fetchCounty") }
-        cell.setup(with: county, at: indexPath)
+        let cell = CountyTableViewCell.deque(from: self.tableView,
+                                             for: indexPath,
+                                             with: county)
         return cell
     }
 
@@ -66,14 +68,25 @@ class CountyTableViewController: UITableViewController, CountyView {
 
 }
 
+// MARK: - UIAlertController
+
 extension CountyTableViewController {
 
     func presentAlert(county: County, title: String, message: String) {
-        let alertView = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertView.addAction(UIAlertAction.init(title: Constants.okayString, style: .default, handler: { _ in
+        let alertView = UIAlertController(title: title,
+                                          message: message,
+                                          preferredStyle: .alert)
+        alertView.addAction(UIAlertAction.init(title: Constants.okayString,
+                                               style: .default,
+                                               handler: { _ in
             alertView.dismiss(animated: true, completion: {
                 print("dismiss")
             })
+        }))
+        alertView.addAction(UIAlertAction.init(title: Constants.removeFromList,
+                                               style: .destructive,
+                                               handler: { [weak self] _ in
+            self?.presenter.deleteCounty(county: county)
         }))
         present(alertView, animated: true, completion: nil)
     }

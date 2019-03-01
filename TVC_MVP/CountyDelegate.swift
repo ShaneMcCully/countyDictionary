@@ -9,5 +9,7 @@
 import Foundation
 
 protocol CountyDelegate: class {
+
+    func deleteCounty(county: County)
     
 }
