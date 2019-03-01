@@ -17,7 +17,7 @@ class CountyTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    func setup(county: County) {
+    func setup(with county: County, at indexPath: IndexPath) {
         countyLabel.text = county.countyName
     }
 
