@@ -21,7 +21,7 @@ protocol CountyView: class {
     func presentAlert(county: County, title: String, message: String)
 
     func reloadData()
-
+    
 }
 
 class CountyTableViewController: UITableViewController, CountyView {
@@ -32,7 +32,6 @@ class CountyTableViewController: UITableViewController, CountyView {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        delegate = self
         presenter = CountyPresnter(view: self)
         presenter.viewDidLoad()
     }
@@ -79,9 +78,7 @@ extension CountyTableViewController {
         alertView.addAction(UIAlertAction.init(title: Constants.okayString,
                                                style: .default,
                                                handler: { _ in
-            alertView.dismiss(animated: true, completion: {
-                print("dismiss")
-            })
+            alertView.dismiss(animated: true, completion: {} )
         }))
         alertView.addAction(UIAlertAction.init(title: Constants.removeFromList,
                                                style: .destructive,

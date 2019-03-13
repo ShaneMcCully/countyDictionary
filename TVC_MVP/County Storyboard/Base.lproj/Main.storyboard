@@ -12,7 +12,7 @@
         <scene sceneID="mhZ-CD-nf4">
             <objects>
                 <tableViewController id="oYE-vq-vYw" customClass="CountyTableViewController" customModule="TVC_MVP" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="20" sectionFooterHeight="28" id="KhH-3F-c0L">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="always" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="20" sectionFooterHeight="28" id="KhH-3F-c0L">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -48,10 +48,12 @@
                             <outlet property="delegate" destination="oYE-vq-vYw" id="mP2-uu-Xvc"/>
                         </connections>
                     </tableView>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <navigationItem key="navigationItem" id="d2m-pk-bO6"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nRq-29-c2U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="133.59999999999999" y="128.18590704647679"/>
+            <point key="canvasLocation" x="1043.4782608695652" y="127.90178571428571"/>
         </scene>
     </scenes>
 </document>

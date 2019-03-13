@@ -16,7 +16,7 @@ private struct Constants {
 
 }
 
-class CountyPresnter {
+class CountyPresnter: CountyDelegate {
 
     unowned let view: CountyView
     weak var delegate: CountyDelegate?
@@ -71,7 +71,9 @@ class CountyPresnter {
                         guard let name = county["name"] as? String else { fatalError() }
                         guard let id = county["id"]  as? Int else { fatalError() }
                         let countyObject = County(countyID: id, countyName: name)
-                        countyArray?.append(countyObject)
+                        if countyObject.countyID != 0 {
+                            countyArray?.append(countyObject)
+                        }
                     }
                 } else {
                     print("JSON error")
