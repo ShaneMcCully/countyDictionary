@@ -16,7 +16,7 @@ private struct Constants {
 
 }
 
-class CountyPresnter: CountyDelegate {
+class CountyPresnter {
 
     unowned let view: CountyView
     weak var delegate: CountyDelegate?
@@ -56,6 +56,10 @@ class CountyPresnter: CountyDelegate {
     }
 
     func deleteCounty(county: County) {
+        delegate?.deleteCounty(county: county)
+    }
+
+    func removeCounty(county: County) {
         countyArray?.removeAll{ $0.countyID == county.countyID }
         reloadData()
     }

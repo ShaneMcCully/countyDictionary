@@ -24,7 +24,7 @@ protocol CountyView: class {
     
 }
 
-class CountyTableViewController: UITableViewController, CountyView {
+class CountyTableViewController: UITableViewController, CountyView, CountyDelegate {
 
     var presenter: CountyPresnter!
     weak var delegate: CountyDelegate?
@@ -34,10 +34,17 @@ class CountyTableViewController: UITableViewController, CountyView {
 
         presenter = CountyPresnter(view: self)
         presenter.viewDidLoad()
+        presenter.delegate = self
     }
 
     func reloadData() {
         tableView.reloadData()
+    }
+
+    // MARK: - CountyDelegate methods
+
+    func deleteCounty(county: County) {
+        presenter.removeCounty(county: county)
     }
 
     // MARK: - UITableViewDataSource methods
