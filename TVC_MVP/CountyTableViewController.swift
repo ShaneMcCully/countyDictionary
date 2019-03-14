@@ -13,28 +13,20 @@ private struct Constants {
     static let cellIdentifier = "CountyCell"
     static let okayString = "Okay"
     static let removeFromList = "Remove From List"
+    static let errorText = "fatal error : fetchCounty"
 
 }
 
-protocol CountyView: class {
+class CountyTableViewController: UITableViewController, CountyViewProtocol {
 
-    func presentAlert(county: County, title: String, message: String)
-
-    func reloadData()
-    
-}
-
-class CountyTableViewController: UITableViewController, CountyView, CountyDelegate {
-
-    var presenter: CountyPresnter!
-    weak var delegate: CountyDelegate?
+    var presenter: CountyDelegate!
+    //weak var delegate: CountyDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        presenter = CountyPresnter(view: self)
+        presenter = CountyPresenter(view: self)
         presenter.viewDidLoad()
-        presenter.delegate = self
     }
 
     func reloadData() {
@@ -58,40 +50,31 @@ class CountyTableViewController: UITableViewController, CountyView, CountyDelega
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let county = presenter.fetchCounty(for: indexPath) else { fatalError("fatal error : fetchCounty") }
-        let cell = CountyTableViewCell.deque(from: self.tableView,
-                                             for: indexPath,
-                                             with: county)
+        guard let county = presenter.fetchCounty(for: indexPath) else { fatalError(Constants.errorText) }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as? CountyTableViewCell else { return UITableViewCell() }
+        cell.setup(with: county)
         return cell
     }
 
     // MARK: - UITableViewDelegate methods
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let county = presenter.fetchCounty(for: indexPath) else { fatalError("fatal error : fetchCounty") }
+        guard let county = presenter.fetchCounty(for: indexPath) else { fatalError(Constants.errorText) }
         presenter.presentAlert(county: county)
     }
 
 }
 
-// MARK: - UIAlertController
+extension CountyTableViewController: AlertView {
 
-extension CountyTableViewController {
-
-    func presentAlert(county: County, title: String, message: String) {
-        let alertView = UIAlertController(title: title,
-                                          message: message,
-                                          preferredStyle: .alert)
-        alertView.addAction(UIAlertAction.init(title: Constants.okayString,
-                                               style: .default,
-                                               handler: { _ in
-            alertView.dismiss(animated: true, completion: {} )
-        }))
-        alertView.addAction(UIAlertAction.init(title: Constants.removeFromList,
-                                               style: .destructive,
-                                               handler: { [weak self] _ in
-            self?.presenter.deleteCounty(county: county)
-        }))
-        present(alertView, animated: true, completion: nil)
+    func presentAlert(title: String?, message: String?, actions: AlertAction...) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        actions.forEach { action in
+            alert.addAction(UIAlertAction(title: action.title, style: (action.style?.mapStyle)!, handler: { _ in
+                action.action?()
+            }))
+        }
+        present(alert, animated: true, completion: nil)
     }
 }
+

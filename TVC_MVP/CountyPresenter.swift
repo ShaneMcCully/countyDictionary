@@ -13,21 +13,21 @@ private struct Constants {
     static let alertTitleBlock = "County ID for "
     static let alertTitleBlockEnd = " is"
     static let headerTitle = "Counties"
+    static let counties = "counties"
+    static let json = "json"
+    static let name = "name"
+    static let id = "id"
 
 }
 
-class CountyPresnter {
+class CountyPresenter: CountyDelegate {
 
-    unowned let view: CountyView
+    unowned let view: CountyViewProtocol
     weak var delegate: CountyDelegate?
 
-    var countyArray: [County]? {
-        didSet {
-            view.reloadData()
-        }
-    }
+    var countyArray: [County]?
 
-    init(view: CountyView) {
+    required init(view: CountyViewProtocol) {
         self.view = view
     }
 
@@ -44,7 +44,13 @@ class CountyPresnter {
     }
 
     func presentAlert(county: County) {
-        view.presentAlert(county: county, title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd, message: String(county.countyID))
+        let dismiss = AlertAction.DefaultActions.dismissAction()
+        let delete = AlertAction.DefaultActions.deleteAction { [weak self] in
+            self?.removeCounty(county: county) // should I be calling a view function here?
+        }
+        view.presentAlert(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd,
+                          message: String(county.countyID),
+                          actions: dismiss, delete)
     }
 
     func numberOfSections() -> Int {
@@ -55,10 +61,6 @@ class CountyPresnter {
         return countyArray?.count ?? 0
     }
 
-    func deleteCounty(county: County) {
-        delegate?.deleteCounty(county: county)
-    }
-
     func removeCounty(county: County) {
         countyArray?.removeAll{ $0.countyID == county.countyID }
         reloadData()
@@ -67,17 +69,16 @@ class CountyPresnter {
     func parseJSON() {
         countyArray = [County]()
         do {
-            if let path = Bundle.main.path(forResource: "counties", ofType: "json") {
+            if let path = Bundle.main.path(forResource: Constants.counties, ofType: Constants.json) {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path))
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
                 if let counties = json as? [AnyObject] {
                     for county in counties {
-                        guard let name = county["name"] as? String else { fatalError() }
-                        guard let id = county["id"]  as? Int else { fatalError() }
+                        guard let name = county[Constants.name] as? String else { fatalError() } // what should be here instead of fatal error?
+                        guard let id = county[Constants.id]  as? Int else { fatalError() }
                         let countyObject = County(countyID: id, countyName: name)
-                        if countyObject.countyID != 0 {
-                            countyArray?.append(countyObject)
-                        }
+                        countyArray?.append(countyObject)
+                        reloadData()
                     }
                 } else {
                     print("JSON error")

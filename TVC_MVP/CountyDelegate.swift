@@ -10,6 +10,22 @@ import Foundation
 
 protocol CountyDelegate: class {
 
-    func deleteCounty(county: County)
+    init(view: CountyViewProtocol)
+
+    func reloadData()
+
+    func viewDidLoad()
+
+    func fetchCounty(for indexPath: IndexPath) -> County?
+
+    func presentAlert(county:County)
+
+    func numberOfSections() -> Int
+
+    func numberOfRowsInSection() -> Int
+
+    func removeCounty(county: County)
+
+    func parseJSON()
     
 }
