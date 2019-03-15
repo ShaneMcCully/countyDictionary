@@ -9,7 +9,15 @@
 import Foundation
 import UIKit
 
-// AlertableView implementartion from DealerHub
+struct TitleConstants {
+
+    static let dismiss = "Dismiss"
+    static let delete = "Delete"
+    static let tryAgain = "Try Again"
+
+}
+
+// NOTE: - AlertableView implementartion from DH
 
 protocol AlertView {
     func presentAlert(title: String?, message: String?, actions: AlertAction...)
@@ -36,11 +44,15 @@ struct AlertAction {
     struct DefaultActions {
 
         static func dismissAction(_ action: (() -> Void)? = nil) -> AlertAction {
-            return AlertAction(title: "Dismiss", style: .standard, action: action)
+            return AlertAction(title: TitleConstants.dismiss, style: .standard, action: action)
         }
 
         static func deleteAction(_ action: (() -> Void)? = nil) -> AlertAction {
-            return AlertAction(title: "Delete", style: .destructive, action: action)
+            return AlertAction(title: TitleConstants.delete, style: .destructive, action: action)
+        }
+
+        static func tryAgainAction(_ action: (() -> Void)? = nil) -> AlertAction {
+            return AlertAction(title: TitleConstants.tryAgain, style: .standard, action: action)
         }
     }
 

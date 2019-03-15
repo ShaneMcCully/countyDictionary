@@ -12,45 +12,34 @@ private struct Constants {
 
     static let alertTitleBlock = "County ID for "
     static let alertTitleBlockEnd = " is"
-    static let headerTitle = "Counties"
     static let counties = "counties"
     static let json = "json"
     static let name = "name"
     static let id = "id"
+    static let jsonError = "Something went wrong"
+    static let tryAgain = "Please try again"
 
 }
 
-class CountyPresenter: CountyDelegate {
+class CountyPresenter: CountyPresnterProtocol {
 
     unowned let view: CountyViewProtocol
-    weak var delegate: CountyDelegate?
+    var countyArray: [County] = [County]()
 
-    var countyArray: [County]?
+    // MARK: - Initialization
 
     required init(view: CountyViewProtocol) {
         self.view = view
     }
 
-    func reloadData() {
-        view.reloadData()
-    }
+    // MARK: - CountyPresnterProtocol methods
 
     func viewDidLoad() {
         parseJSON()
     }
 
-    func fetchCounty(for indexPath: IndexPath) -> County? {
-        return countyArray?[indexPath.row]
-    }
-
-    func presentAlert(county: County) {
-        let dismiss = AlertAction.DefaultActions.dismissAction()
-        let delete = AlertAction.DefaultActions.deleteAction { [weak self] in
-            self?.removeCounty(county: county) // should I be calling a view function here?
-        }
-        view.presentAlert(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd,
-                          message: String(county.countyID),
-                          actions: dismiss, delete)
+    func reloadData() {
+        view.reloadData()
     }
 
     func numberOfSections() -> Int {
@@ -58,36 +47,61 @@ class CountyPresenter: CountyDelegate {
     }
 
     func numberOfRowsInSection() -> Int {
-        return countyArray?.count ?? 0
+        return countyArray.count
     }
 
-    func removeCounty(county: County) {
-        countyArray?.removeAll{ $0.countyID == county.countyID }
+    func removeCounty(at indexPath: IndexPath) {
+        countyArray.remove(at: indexPath.row)
         reloadData()
     }
 
+    func fetchCounty(for indexPath: IndexPath) -> County? {
+        return countyArray[indexPath.row]
+    }
+
+    func presentAlert(at indexPath: IndexPath) {
+        let dismiss = AlertAction.DefaultActions.dismissAction()
+        let delete = AlertAction.DefaultActions.deleteAction {
+            self.removeCounty(at: indexPath)
+        }
+        let county = countyArray[indexPath.row]
+        view.presentAlert(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd,
+                          message: String(county.countyID),
+                          actions: dismiss, delete)
+    }
+
     func parseJSON() {
-        countyArray = [County]()
         do {
             if let path = Bundle.main.path(forResource: Constants.counties, ofType: Constants.json) {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path))
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
                 if let counties = json as? [AnyObject] {
                     for county in counties {
-                        guard let name = county[Constants.name] as? String else { fatalError() } // what should be here instead of fatal error?
-                        guard let id = county[Constants.id]  as? Int else { fatalError() }
+                        guard let name = county[Constants.name] as? String else { return }
+                        guard let id = county[Constants.id] as? Int else { return }
                         let countyObject = County(countyID: id, countyName: name)
-                        countyArray?.append(countyObject)
+                        countyArray.append(countyObject)
                         reloadData()
                     }
                 } else {
-                    print("JSON error")
+                    presentParseErrorAlert()
                 }
             } else {
-                print("File path error")
+                presentParseErrorAlert()
             }
         } catch {
+            presentParseErrorAlert()
             print(error.localizedDescription)
         }
+    }
+
+    // MARK: - Private Methods
+
+    private func presentParseErrorAlert() {
+        let dimiss = AlertAction.DefaultActions.dismissAction()
+        let tryAgain = AlertAction.DefaultActions.tryAgainAction { [weak self] in
+            self?.parseJSON()
+        }
+        view.presentAlert(title: Constants.jsonError, message: Constants.tryAgain, actions: dimiss, tryAgain)
     }
 }

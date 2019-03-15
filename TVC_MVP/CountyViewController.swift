@@ -17,39 +17,31 @@ private struct Constants {
 
 }
 
-class CountyTableViewController: UITableViewController, CountyViewProtocol {
+class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CountyViewProtocol {
 
-    var presenter: CountyDelegate!
-    //weak var delegate: CountyDelegate?
+    var presenter: CountyPresnterProtocol!
+    @IBOutlet weak var tableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         presenter = CountyPresenter(view: self)
         presenter.viewDidLoad()
-    }
-
-    func reloadData() {
-        tableView.reloadData()
-    }
-
-    // MARK: - CountyDelegate methods
-
-    func deleteCounty(county: County) {
-        presenter.removeCounty(county: county)
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 
     // MARK: - UITableViewDataSource methods
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return presenter.numberOfSections()
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
           return presenter.numberOfRowsInSection()
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let county = presenter.fetchCounty(for: indexPath) else { fatalError(Constants.errorText) }
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as? CountyTableViewCell else { return UITableViewCell() }
         cell.setup(with: county)
@@ -58,14 +50,11 @@ class CountyTableViewController: UITableViewController, CountyViewProtocol {
 
     // MARK: - UITableViewDelegate methods
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let county = presenter.fetchCounty(for: indexPath) else { fatalError(Constants.errorText) }
-        presenter.presentAlert(county: county)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        presenter.presentAlert(at: indexPath)
     }
 
-}
-
-extension CountyTableViewController: AlertView {
+    // MARK: - CountyViewProtocol methods
 
     func presentAlert(title: String?, message: String?, actions: AlertAction...) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -76,5 +65,10 @@ extension CountyTableViewController: AlertView {
         }
         present(alert, animated: true, completion: nil)
     }
+
+    func reloadData() {
+        tableView.reloadData()
+    }
+
 }
 

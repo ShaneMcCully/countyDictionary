@@ -1,5 +1,5 @@
 //
-//  CountyDelegate.swift
+//  CountyPresnterProtocol.swift
 //  TVC_MVP
 //
 //  Created by Shane McCully on 01/03/2019.
@@ -8,23 +8,23 @@
 
 import Foundation
 
-protocol CountyDelegate: class {
+protocol CountyPresnterProtocol: class {
 
     init(view: CountyViewProtocol)
 
-    func reloadData()
-
     func viewDidLoad()
 
-    func fetchCounty(for indexPath: IndexPath) -> County?
-
-    func presentAlert(county:County)
+    func reloadData()
 
     func numberOfSections() -> Int
 
     func numberOfRowsInSection() -> Int
 
-    func removeCounty(county: County)
+    func removeCounty(at indexPath: IndexPath)
+
+    func fetchCounty(for indexPath: IndexPath) -> County?
+
+    func presentAlert(at indexPath: IndexPath)
 
     func parseJSON()
     

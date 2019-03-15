@@ -16,5 +16,4 @@ class CountyTableViewCell: UITableViewCell {
         countyLabel.text = county.countyName
     }
 
-
 }
