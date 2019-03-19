@@ -72,6 +72,7 @@ class CountyPresenter: CountyPresenterProtocol {
                         let countyObject = County(countyID: id, countyName: name)
                         countyArray.append(countyObject)
                     }
+                    reloadData()
                 } else {
                     presentJSONErrorAlert()
                 }
@@ -81,7 +82,6 @@ class CountyPresenter: CountyPresenterProtocol {
         } catch {
             print(error.localizedDescription)
         }
-        reloadData()
     }
 
     private func presentJSONErrorAlert() {
