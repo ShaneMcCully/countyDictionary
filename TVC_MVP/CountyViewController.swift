@@ -14,13 +14,15 @@ private struct Constants {
     static let okayString = "Okay"
     static let removeFromList = "Remove From List"
     static let errorText = "fatal error : fetchCounty"
+    static let alertTitleBlock = "County ID for "
+    static let alertTitleBlockEnd = " is"
 
 }
 
 class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CountyViewProtocol {
 
-    var presenter: CountyPresnterProtocol!
-    @IBOutlet weak var tableView: UITableView!
+    var presenter: CountyPresenterProtocol!
+    @IBOutlet private weak var tableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
