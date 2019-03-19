@@ -22,6 +22,7 @@ private struct Constants {
 class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CountyViewProtocol {
 
     @IBOutlet private weak var tableView: UITableView!
+    
     var presenter: CountyPresenterProtocol!
 
     override func viewDidLoad() {
@@ -54,7 +55,7 @@ class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - UITableViewDelegate methods
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter.didSelectRow(indexPath: indexPath)
+        presenter.didSelectRow(at: indexPath)
     }
 
     // MARK: - CountyViewProtocol methods
