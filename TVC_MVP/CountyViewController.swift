@@ -45,7 +45,8 @@ class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let county = presenter.fetchCounty(for: indexPath) else { fatalError(Constants.errorText) }
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as? CountyTableViewCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier,
+                                                       for: indexPath) as? CountyTableViewCell else { return UITableViewCell() }
         cell.setup(with: county)
         return cell
     }
