@@ -104,4 +104,5 @@ class CountyPresenter: CountyPresenterProtocol {
         }
         view.presentAlert(title: Constants.jsonError, message: Constants.tryAgain, actions: dimiss, tryAgain)
     }
+    
 }
