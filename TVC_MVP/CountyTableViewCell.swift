@@ -10,7 +10,7 @@ import UIKit
 
 class CountyTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var countyLabel: UILabel!
+    @IBOutlet private weak var countyLabel: UILabel!
 
     func setup(with county: County) {
         countyLabel.text = county.countyName
