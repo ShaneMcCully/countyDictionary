@@ -21,8 +21,8 @@ private struct Constants {
 
 class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CountyViewProtocol {
 
-    var presenter: CountyPresenterProtocol!
     @IBOutlet private weak var tableView: UITableView!
+    var presenter: CountyPresenterProtocol!
 
     override func viewDidLoad() {
         super.viewDidLoad()
