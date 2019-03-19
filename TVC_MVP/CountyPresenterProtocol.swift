@@ -18,10 +18,8 @@ protocol CountyPresenterProtocol: class {
 
     func numberOfRowsInSection() -> Int
 
-    func fetchCounty(for indexPath: IndexPath) -> County?
+    func getObject(at indexPath: IndexPath) -> County?
 
-    func parseJSON()
-
-    func presentCountyAlert(indexPath: IndexPath)
+    func didSelectRow(indexPath: IndexPath)
     
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 private struct Constants {
-
+    
     static let alertTitleBlock = "County ID for "
     static let alertTitleBlockEnd = " is"
     static let counties = "counties"
@@ -18,39 +18,48 @@ private struct Constants {
     static let id = "id"
     static let jsonError = "Something went wrong"
     static let tryAgain = "Please try again"
-
+    
 }
 
 class CountyPresenter: CountyPresenterProtocol {
-
+    
     unowned let view: CountyViewProtocol
     var countyArray = [County]()
-
+    
     // MARK: - Initialization
-
+    
     required init(view: CountyViewProtocol) {
         self.view = view
     }
-
+    
     // MARK: - CountyPresnterProtocol methods
-
+    
     func viewDidLoad() {
         parseJSON()
     }
-
+    
     func numberOfSections() -> Int {
         return 1
     }
-
+    
     func numberOfRowsInSection() -> Int {
         return countyArray.count
     }
-
-    func fetchCounty(for indexPath: IndexPath) -> County? {
+    
+    func getObject(at indexPath: IndexPath) -> County? {
         return countyArray[indexPath.row]
     }
-
-    func parseJSON() {
+    
+    func didSelectRow(indexPath: IndexPath) {
+        let county = countyArray[indexPath.row]
+        view.presentAlert(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd, message: String(county.countyID)) { [weak self] in
+            self?.removeCounty(at: indexPath)
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func parseJSON() {
         do {
             if let path = Bundle.main.path(forResource: Constants.counties, ofType: Constants.json) {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path))
@@ -73,29 +82,20 @@ class CountyPresenter: CountyPresenterProtocol {
             print(error.localizedDescription)
         }
     }
-
-    func presentCountyAlert(indexPath: IndexPath) {
-        let county = countyArray[indexPath.row]
-        view.presentAlert(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd, message: String(county.countyID)) {
-            self.removeCounty(at: indexPath)
-        }
-    }
-
-    // MARK: - Private Methods
-
+    
     private func presentJSONErrorAlert() {
-        view.presentAlert(title: Constants.jsonError, message: Constants.tryAgain) {
-            self.parseJSON()
+        view.presentAlert(title: Constants.jsonError, message: Constants.tryAgain) { [weak self] in
+            self?.parseJSON()
         }
     }
-
+    
     private func reloadData() {
         view.reloadData()
     }
-
+    
     private func removeCounty(at indexPath: IndexPath) {
         countyArray.remove(at: indexPath.row)
         reloadData()
     }
-
+    
 }
