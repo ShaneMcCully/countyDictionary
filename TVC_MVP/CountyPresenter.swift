@@ -50,7 +50,7 @@ class CountyPresenter: CountyPresenterProtocol {
         return countyArray[indexPath.row]
     }
 
-    func didSelectRow(indexPath: IndexPath) {
+    func didSelectRow(at indexPath: IndexPath) {
         let county = countyArray[indexPath.row]
         view.presentAlert(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd,
                           message: String(county.countyID)) { [weak self] in

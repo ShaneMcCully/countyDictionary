@@ -20,6 +20,6 @@ protocol CountyPresenterProtocol: class {
 
     func getObject(at indexPath: IndexPath) -> County?
 
-    func didSelectRow(indexPath: IndexPath)
+    func didSelectRow(at indexPath: IndexPath)
     
 }
