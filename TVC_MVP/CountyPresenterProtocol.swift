@@ -14,18 +14,14 @@ protocol CountyPresenterProtocol: class {
 
     func viewDidLoad()
 
-    func reloadData()
-
     func numberOfSections() -> Int
 
     func numberOfRowsInSection() -> Int
 
-    func removeCounty(at indexPath: IndexPath)
-
     func fetchCounty(for indexPath: IndexPath) -> County?
 
-    func presentAlert(at indexPath: IndexPath)
-
     func parseJSON()
+
+    func presentCountyAlert(indexPath: IndexPath)
     
 }

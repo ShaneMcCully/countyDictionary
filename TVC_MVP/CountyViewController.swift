@@ -40,7 +40,7 @@ class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-          return presenter.numberOfRowsInSection()
+        return presenter.numberOfRowsInSection()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -54,23 +54,23 @@ class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDa
     // MARK: - UITableViewDelegate methods
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter.presentAlert(at: indexPath)
+        presenter.presentCountyAlert(indexPath: indexPath)
     }
 
     // MARK: - CountyViewProtocol methods
 
-    func presentAlert(title: String?, message: String?, actions: AlertAction...) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        actions.forEach { action in
-            alert.addAction(UIAlertAction(title: action.title, style: (action.style?.mapStyle)!, handler: { _ in
-                action.action?()
-            }))
-        }
-        present(alert, animated: true, completion: nil)
-    }
-
     func reloadData() {
         tableView.reloadData()
+    }
+
+    func presentAlert(title: String, message: String, action: (() -> Void)?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        guard let action = action else { return }
+        alert.addAction(UIAlertAction(title: Constants.okayString, style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: Constants.removeFromList, style: .destructive, handler: { _ in
+            action()
+        }))
+        present(alert, animated: true, completion: nil)
     }
 
 }

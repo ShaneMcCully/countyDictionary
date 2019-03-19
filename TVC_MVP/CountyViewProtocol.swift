@@ -8,8 +8,10 @@
 
 import Foundation
 
-protocol CountyViewProtocol: class, AlertView {
+protocol CountyViewProtocol: class {
 
     func reloadData()
+
+    func presentAlert(title: String, message: String, action: (() -> Void)?)
 
 }
