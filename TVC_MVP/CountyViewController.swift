@@ -45,7 +45,7 @@ class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let county = presenter.getObject(at: indexPath) else { return UITableViewCell() }
+        guard let county = presenter.getObject(at: indexPath) else { fatalError(Constants.errorText) }
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier,
                                                        for: indexPath) as? CountyTableViewCell else { return UITableViewCell() }
         cell.setup(with: county)
@@ -64,9 +64,8 @@ class CountyViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.reloadData()
     }
 
-    func presentAlert(title: String, message: String, action: (() -> Void)?) {
+    func presentAlert(title: String, message: String, action: @escaping (() -> Void)) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        guard let action = action else { return }
         alert.addAction(UIAlertAction(title: Constants.okayString, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: Constants.removeFromList, style: .destructive, handler: { _ in
             action()

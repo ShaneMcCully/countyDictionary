@@ -12,6 +12,6 @@ protocol CountyViewProtocol: class {
 
     func reloadData()
 
-    func presentAlert(title: String, message: String, action: (() -> Void)?)
+    func presentAlert(title: String, message: String, action: @escaping (() -> Void))
 
 }
