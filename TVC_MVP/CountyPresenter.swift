@@ -21,10 +21,10 @@ private struct Constants {
 
 }
 
-class CountyPresenter: CountyPresnterProtocol {
+class CountyPresenter: CountyPresenterProtocol {
 
     unowned let view: CountyViewProtocol
-    var countyArray: [County] = [County]()
+    var countyArray = [County]()
 
     // MARK: - Initialization
 

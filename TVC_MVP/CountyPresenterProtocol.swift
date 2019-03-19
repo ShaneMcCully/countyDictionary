@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol CountyPresnterProtocol: class {
+protocol CountyPresenterProtocol: class {
 
     init(view: CountyViewProtocol)
 
