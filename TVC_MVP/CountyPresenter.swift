@@ -11,17 +11,18 @@ import Foundation
 private struct Constants {
 
     static let alertTitleBlock = "County ID: "
-    static let alertTitleBlockEnd = " is"
+    static let alertNewborns = "Newborns: "
+    static let alertPopulation = "Population: "
     static let jsonFile = "counties2"
     static let json = "json"
     static let name = "name"
     static let id = "id"
-    static let jsonError = "Something went wrong"
-    static let tryAgain = "Please try again"
     static let extras = "extras"
     static let newborns = "new_borns_this_year"
     static let population = "population"
-
+    static let jsonError = "Something went wrong"
+    static let tryAgain = "Please try again"
+    
 }
 
 class CountyPresenter: CountyPresenterProtocol {
@@ -63,58 +64,22 @@ class CountyPresenter: CountyPresenterProtocol {
 
     // MARK: - Private Methods
 
-    private func generateAlertMessage(county: County) -> String {
-        let id = Constants.alertTitleBlock + String(county.countyID) + "\n"
-        guard let nb = county.countyExtras?[Constants.newborns] else { return id }
-        guard let pop = county.countyExtras?[Constants.population] else { return id }
-        if county.countyExtras != nil {
-            let newborns = "Newborns: " + String(describing: nb) + "\n"
-            let population = "Population: " + String(describing: pop) + "\n"
-            return id + newborns + population
-        }
-        return id
-    }
-
     private func parseJSON() {
-        var countyExtras: [String: Any]?//countyExtras?
-        var countyPopulation: Int? = nil
-        var countyNewborns: Int? = nil
         do {
-            //create path/url
             if let path = Bundle.main.path(forResource: Constants.jsonFile, ofType: Constants.json) {
-
-                // fetch the data from path/url
                 let data = try Data(contentsOf: URL(fileURLWithPath: path))
-
-                // create JSON object from data
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
-
-                // cast the json as [AnyObject](dictionary?*) and assign to variable
-                guard let counties = json as? [AnyObject] else { return }
-
-                // iterate through
+                guard let counties = json as? [[AnyHashable:Any]] else { return }
                 for county in counties {
-                    guard let name = county[Constants.name] as? String else { return }
-                    guard let id = county[Constants.id] as? Int else { return }
-
-                    // if the object has an "extras" field...
+                    guard let name = county[Constants.name] as? String,
+                        let id = county[Constants.id] as? Int else { return }
+                    var countyObject = County(countyID: id, countyName: name)
                     if let extras = county[Constants.extras] as? [String: Any] {
-                        countyExtras = extras
-
-                        // if the extras object has a newborns key-vlaue pair
-                        if let newBorns = extras[Constants.newborns] as? Int {
-                            countyNewborns = newBorns
-                        }
-
-                        // // if the extras object has a population key-value pair
-                        if let population = extras[Constants.population] as? Int {
-                            countyPopulation = population
-                        }
-                    } else {
-                        countyExtras = nil
+                        var countyExtras = CountyExtras()
+                        countyExtras.newBorns = extras[Constants.newborns] as? Int
+                        countyExtras.population = extras[Constants.population] as? Int
+                        countyObject.countyExtras = countyExtras
                     }
-                    // instantiate county object with values extracted & append to array of counties
-                    let countyObject = County(countyID: id, countyName: name, countyExtras: countyExtras)
                     countyArray.append(countyObject)
                 }
                 reloadData()
@@ -124,6 +89,23 @@ class CountyPresenter: CountyPresenterProtocol {
         } catch {
             print(error.localizedDescription)
         }
+    }
+
+    private func generateAlertMessage(county: County) -> String {
+        var newborns: String = ""
+        var population: String = ""
+        let id = Constants.alertTitleBlock + String(county.countyID)
+        let extras = county.countyExtras
+        if county.countyExtras != nil {
+            if let nb = extras?.newBorns {
+                newborns = Constants.alertNewborns + String(describing: nb)
+            }
+            if let pop = extras?.population {
+                population = Constants.alertPopulation + String(describing: pop)
+            }
+            return id + "\n" + population + "\n" + newborns
+        }
+        return id
     }
 
     private func presentJSONErrorAlert() {
