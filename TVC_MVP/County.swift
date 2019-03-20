@@ -12,13 +12,20 @@ struct County {
 
     let countyID: Int
     let countyName: String
-    let countyExtras: [String: Any]?
+    var countyExtras: CountyExtras?
 
+    init(countyID: Int, countyName: String) {
+        self.countyID = countyID
+        self.countyName = countyName
+    }
+    
 }
 
-struct countyExtras {
+struct CountyExtras {
 
-    let population: Int
-    let newBorns: Int
+    var population: Int?
+    var newBorns: Int?
+
+    init() { }
 
 }
