@@ -10,7 +10,7 @@ import Foundation
 
 private struct Constants {
 
-    static let alertTitleBlock = "County ID for "
+    static let alertTitleBlock = "County ID: "
     static let alertTitleBlockEnd = " is"
     static let jsonFile = "counties2"
     static let json = "json"
@@ -55,21 +55,25 @@ class CountyPresenter: CountyPresenterProtocol {
 
     func didSelectRow(at indexPath: IndexPath) {
         let county = countyArray[indexPath.row]
-
-        print("name:\(county.countyName)")
-        print("id:\(county.countyID)")
-//        print("population: \(county.countyExtras?.newBorns)")
-//        print("newBorns: \(county.countyExtras?.population)")
-        print("population: \(county.countyExtras?[Constants.population])")
-        print("newBorns: \(county.countyExtras?[Constants.newborns])")
-
-        view.presentAlert(title: Constants.alertTitleBlock + county.countyName + Constants.alertTitleBlockEnd,
-                          message: String(county.countyID)) { [weak self] in
+        view.presentAlert(title: county.countyName,
+                          message: generateAlertMessage(county: county)) { [weak self] in
                             self?.removeCounty(at: indexPath)
         }
     }
 
     // MARK: - Private Methods
+
+    private func generateAlertMessage(county: County) -> String {
+        let id = Constants.alertTitleBlock + String(county.countyID) + "\n"
+        guard let nb = county.countyExtras?[Constants.newborns] else { return id }
+        guard let pop = county.countyExtras?[Constants.population] else { return id }
+        if county.countyExtras != nil {
+            let newborns = "Newborns: " + String(describing: nb) + "\n"
+            let population = "Population: " + String(describing: pop) + "\n"
+            return id + newborns + population
+        }
+        return id
+    }
 
     private func parseJSON() {
         var countyExtras: [String: Any]?//countyExtras?
@@ -85,7 +89,7 @@ class CountyPresenter: CountyPresenterProtocol {
                 // create JSON object from data
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
 
-                // cast the json as [AnyObject](dictionary?) and assign to variable
+                // cast the json as [AnyObject](dictionary?*) and assign to variable
                 guard let counties = json as? [AnyObject] else { return }
 
                 // iterate through
@@ -106,8 +110,6 @@ class CountyPresenter: CountyPresenterProtocol {
                         if let population = extras[Constants.population] as? Int {
                             countyPopulation = population
                         }
-
-
                     } else {
                         countyExtras = nil
                     }
