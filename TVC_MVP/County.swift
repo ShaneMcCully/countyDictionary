@@ -12,5 +12,13 @@ struct County {
 
     let countyID: Int
     let countyName: String
-    
+    let countyExtras: [String: Any]?
+
+}
+
+struct countyExtras {
+
+    let population: Int
+    let newBorns: Int
+
 }
