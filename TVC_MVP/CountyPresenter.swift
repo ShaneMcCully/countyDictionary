@@ -92,18 +92,18 @@ class CountyPresenter: CountyPresenterProtocol {
     }
 
     private func generateAlertMessage(county: County) -> String {
-        var newborns: String = ""
-        var population: String = ""
+        var newbornString: String = ""
+        var populationString: String = ""
         let id = Constants.alertTitleBlock + String(county.countyID)
         let extras = county.countyExtras
-        if county.countyExtras != nil {
+        if extras != nil {
             if let nb = extras?.newBorns {
-                newborns = Constants.alertNewborns + String(describing: nb)
+                newbornString = Constants.alertNewborns + String(describing: nb)
             }
             if let pop = extras?.population {
-                population = Constants.alertPopulation + String(describing: pop)
+                populationString = Constants.alertPopulation + String(describing: pop)
             }
-            return id + "\n" + population + "\n" + newborns
+            return id + "\n" + populationString + "\n" + newbornString
         }
         return id
     }
