@@ -23,10 +23,10 @@ struct County {
 
 struct CountyExtras {
 
-    var population: Int
-    var newBorns: Int
+    var population: Int?
+    var newBorns: Int?
 
-    init(population: Int = 0, newBorns: Int = 0) {
+    init(population: Int? = nil, newBorns: Int? = nil) {
         self.population = population
         self.newBorns = newBorns
     }

@@ -75,12 +75,8 @@ class CountyPresenter: CountyPresenterProtocol {
                     var countyObject = County(countyID: id, countyName: name)
                     if let extras = county[Constants.extras] as? [String: Any] {
                         var countyExtras = CountyExtras()
-                        if let newBorns = extras[Constants.newborns] as? Int {
-                            countyExtras.newBorns = newBorns
-                        }
-                        if let population = extras[Constants.population] as? Int {
-                            countyExtras.population = population
-                        }
+                        countyExtras.newBorns = extras[Constants.newborns] as? Int
+                        countyExtras.population = extras[Constants.population] as? Int
                         countyObject.countyExtras = countyExtras
                     }
                     countyArray.append(countyObject)
@@ -96,12 +92,13 @@ class CountyPresenter: CountyPresenterProtocol {
 
     private func generateAlertMessage(county: County) -> String {
         var id = Constants.alertTitleBlock + String(county.countyID)
-        let extras = county.countyExtras
-        if let nb = extras?.newBorns {
-            id.append("\n" + Constants.alertNewborns + String(nb))
-        }
-        if let pop = extras?.population {
-            id.append("\n" + Constants.alertPopulation + String(pop))
+        if let extras = county.countyExtras {
+            if let nb = extras.newBorns {
+                id.append("\n" + Constants.alertNewborns + String(nb))
+            }
+            if let pop = extras.population {
+                id.append("\n" + Constants.alertPopulation + String(pop))
+            }
         }
         return id
     }
