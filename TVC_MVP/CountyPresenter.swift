@@ -75,8 +75,12 @@ class CountyPresenter: CountyPresenterProtocol {
                     var countyObject = County(countyID: id, countyName: name)
                     if let extras = county[Constants.extras] as? [String: Any] {
                         var countyExtras = CountyExtras()
-                        countyExtras.newBorns = extras[Constants.newborns] as? Int
-                        countyExtras.population = extras[Constants.population] as? Int
+                        if let newBorns = extras[Constants.newborns] as? Int {
+                            countyExtras.newBorns = newBorns
+                        }
+                        if let population = extras[Constants.population] as? Int {
+                            countyExtras.population = population
+                        }
                         countyObject.countyExtras = countyExtras
                     }
                     countyArray.append(countyObject)
