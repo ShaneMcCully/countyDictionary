@@ -56,9 +56,8 @@ class CountyPresenter: CountyPresenterProtocol {
 
     func didSelectRow(at indexPath: IndexPath) {
         let county = countyArray[indexPath.row]
-        view.presentAlert(title: county.countyName,
-                          message: generateAlertMessage(county: county)) { [weak self] in
-                            self?.removeCounty(at: indexPath)
+        view.presentAlert(title: county.countyName, message: generateAlertMessage(county: county)) { [weak self] in
+            self?.removeCounty(at: indexPath)
         }
     }
 
@@ -69,7 +68,7 @@ class CountyPresenter: CountyPresenterProtocol {
             if let path = Bundle.main.path(forResource: Constants.jsonFile, ofType: Constants.json) {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path))
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
-                guard let counties = json as? [[AnyHashable:Any]] else { return }
+                guard let counties = json as? [[AnyHashable: Any]] else { return }
                 for county in counties {
                     guard let name = county[Constants.name] as? String,
                         let id = county[Constants.id] as? Int else { return }
