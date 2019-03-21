@@ -18,17 +18,13 @@ struct County {
         self.countyID = countyID
         self.countyName = countyName
     }
-
-    func hasExtras() -> Bool {
-        return countyExtras != nil
-    }
     
 }
 
 struct CountyExtras {
 
-    var population: Int?
-    var newBorns: Int?
+    var population: Int
+    var newBorns: Int
 
     init(population: Int = 0, newBorns: Int = 0) {
         self.population = population
